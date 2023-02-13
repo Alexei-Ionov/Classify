@@ -13,22 +13,34 @@
 #     this function terminates the program with error code 36
 # ==============================================================================
 relu:
-    # Prologue
+    addi t0 x0 1 ##creates a temp register with value of 1 to be used in the if statement below
+    bge a1 t0 Loop
+    li a0 36
+    j exit
+
+add t0 x0 x0 ##initalizing index
+
+Loop:
+    bge t0 a1 loop_end
+    lw t1 0(a0)
+    blt t1 0 Absoluteify
 
 
-loop_start:
+
+
+Absoluteify:
+    sub t2 x0 t1
+    sw t2 0(a0)
+    
+
+    
+    
 
 
 
 
-
-
-
-
-loop_continue:
-
-
-
+#loop_start:
+#loop_continue:
 loop_end:
 
 
