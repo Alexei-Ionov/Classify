@@ -20,8 +20,6 @@ relu:
     li a0 36
     j exit
 
-
-
 Loop:
     bge t2 a1 quitLoop
     lw t0 0(a0)
@@ -30,16 +28,13 @@ Loop:
     addi t1 t1 4
     j Loop
 
-
-
-
 Absoluteify:
-    bge t0 x0 exit
+    bge t0 x0 backToLoop
     sub t2 x0 t1
     sw t2 0(a0)
-    j exit 
+    j backToLoop 
 
-exit: 
+backToLoop: 
     jr ra
 
 quitLoop:
