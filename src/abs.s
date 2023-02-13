@@ -18,7 +18,7 @@ abs:
     sub t0, x0, t0
 
     # Store number back to memory
-    sw t0 4(a0)
+    sw t0 0(a0)
 
 done:
   ret
