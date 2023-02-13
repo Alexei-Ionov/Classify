@@ -39,7 +39,7 @@ Absoluteify:
     sw t2 0(a0)
     j exit 
 
-exit end: 
+exit: 
     jr ra
 
 
