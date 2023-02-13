@@ -23,7 +23,7 @@ relu:
 Loop:
     bge t2 a1 quitLoop
     lw t0 0(a0)
-    jal rd Absoluteify
+    jal ra Absoluteify
     addi t2 t2 1
     addi t1 t1 4
     j Loop
