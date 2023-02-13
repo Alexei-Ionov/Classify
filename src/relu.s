@@ -23,7 +23,7 @@ relu:
 
 
 Loop:
-    bge t2 a1 loop_end
+    bge t2 a1 quitLoop
     lw t0 0(a0)
     jal rd Absoluteify
     addi t2 t2 1
@@ -41,6 +41,9 @@ Absoluteify:
 
 exit: 
     jr ra
+
+quitLoop:
+
 
 
 
