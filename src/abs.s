@@ -9,10 +9,10 @@
 #   None
 # =================================================================
 abs:
-    # Prologue
+ 
     # Load number from memory
     lw t0 0(a0)
-    blt t0, zero, done
+    bge t0, zero, done
 
     # Negate a0
     sub t0, x0, t0
@@ -27,4 +27,4 @@ done:
 
     # Epilogue
 
-    jr ra
+jr ra
