@@ -30,15 +30,11 @@ Loop:
 
 Absoluteify:
     bge t0 x0 backToLoop
-    sub t2 x0 t1
-    sw t2 0(a0)
+    sub t0 x0 t0
+    sw t0 0(a0)
     j backToLoop 
 
 backToLoop: 
     jr ra
 
 quitLoop:
-
-
-
-
