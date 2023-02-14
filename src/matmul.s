@@ -89,7 +89,7 @@ Save:
     mv s6 a6        #s6 is ptr of res array
     mv s7 x0        #col index
     mv s2 a2
-    la s10 InnerLoopWork
+    
     la s11 Outer_Loop_Work
     jr ra
 
