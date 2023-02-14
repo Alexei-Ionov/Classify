@@ -18,27 +18,42 @@
 #     this function terminates the program with error code 37
 # =======================================================
 dot:
+    addi t0 x0 1
+    mv t1 a0 #copy of arr_0 ptr
+    mv t2 a1 #copy of arr_1 ptr
 
-    # Prologue
-
-
-loop_start:
-
-
+    add a0 x0 x0 #set res = 0
 
 
+    addi t4 x0 4 #constant for next mul instruction. aka jump for each word
 
+    mul t5 a3 t4 #new jump that considers stride for arr0
+    mul t6 a4 t4 #new jump that considers stride for arr1
 
+    blt a2 t0 error_36 #less than one element to compare
+    blt a3 t0 error_37
+    blt a4 t0 error_37
+    j Loop
+    ##USE T3 & T4 
 
+Loop:
+    beq a2 x0 quit ##used up all elements
+    lw t3 0(a0)
+    lw t4 0(a1)
+    mul t0 t3 t4
+    add a0 a0 t0 #res += (t3 * t4)
+    add a0 a0 t5 #ptr = ptr + (stride*4)
+    add a1 a1 t6 #ptr = ptr + (stride*4)
+    
+    addi t3 x0 1 #t3 = 1
+    sub a2 a2 t3 #essentially, a2 -= 1
+    j Loop
 
-
-
-
-
-loop_end:
-
-
-    # Epilogue
-
-
-    jr ra
+error_36: 
+    li a0 36 
+    j exit
+error_37: 
+    li a0 37
+    j exit
+quit:
+    ret
