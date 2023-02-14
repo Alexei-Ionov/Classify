@@ -39,7 +39,7 @@ class TestAbsLoss(unittest.TestCase):
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
 
         # create array0 in the data section
-        array0 = t.array([1, 2, 3])
+        array0 = t.array([1, -1, 3])
         # load address of `array0` into register a0
         t.input_array("a0", array0)
         # create array1 in the data section
@@ -55,16 +55,15 @@ class TestAbsLoss(unittest.TestCase):
         t.input_array("a3", array2)
         # call the `abs_loss` function
         t.call("abs_loss")
-        
         # check that the result array contains the correct output
-        t.check_array(array2, [0, 0, 0])
+        t.check_array(array2, [0, 3, 0])
         # check that the register a0 contains the correct output
-        t.check_scalar("a0", 0)
+        t.check_scalar("a0", 3)
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
         t.execute()
 
 
-    def test_exception2(self):
+    def test_exception_bad_len(self):
         # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
 
