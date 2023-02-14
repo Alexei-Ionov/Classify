@@ -55,6 +55,9 @@ class TestAbsLoss(unittest.TestCase):
         t.input_array("a3", array2)
         # call the `abs_loss` function
         t.call("abs_loss")
+        
+        if (len(array2) < 1):
+            t.execute(code=36)
         # check that the result array contains the correct output
         t.check_array(array2, [0, 0, 0])
         # check that the register a0 contains the correct output
