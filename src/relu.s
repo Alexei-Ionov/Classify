@@ -13,28 +13,35 @@
 #     this function terminates the program with error code 36
 # ==============================================================================
 relu:
-    addi t0 x0 1 ##creates a temp register with value of 1 to be used in the if statement below
-    mv t1 a0 #copy pointer over 
-    add t2 x0 x0 #initalizing start index
-    bge a1 t0 Loop
+    addi t0 x0 1
+    blt a1 t0 error
+    
+    #PROLOGUE
+    addi sp sp -4
+    sw ra 0(sp)
+    ###
+    mv t0 x0        #index
+    la t3 Loop_Incrementation
+    
+Loop:
+    bge t0 a1 quit
+    lw t1 0(a0)
+    blt t1 x0 Change_Val       #if val < 0, make it 0
+    
+Loop_Incrementation:
+    addi a0 a0 4
+    addi t0 t0 1        #increment index
+    j Loop
+    
+Change_Val:
+    sw x0 0(a0)
+    j Loop_Incrementation
+
+error:
     li a0 36
     j exit
 
-Loop:
-    bge t2 a1 quitLoop
-    lw t0 0(a0)
-    jal ra Absoluteify
-    addi t2 t2 1
-    addi t1 t1 4
-    j Loop
-
-Absoluteify:
-    bge t0 x0 backToLoop
-    sub t0 x0 t0
-    sw t0 0(a0)
-    j backToLoop 
-
-backToLoop: 
+quit: 
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
-
-quitLoop:
