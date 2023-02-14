@@ -286,7 +286,7 @@ class TestInitializeZero(unittest.TestCase):
 
 
         # input the length of the desired array
-        t.input_scalar("a0", 0xFFFFFFFF)
+        t.input_scalar("a0", -3)
         
         # call the `initialize_zero` function
         t.call("initialize_zero")
