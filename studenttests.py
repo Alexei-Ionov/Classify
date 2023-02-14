@@ -56,8 +56,6 @@ class TestAbsLoss(unittest.TestCase):
         # call the `abs_loss` function
         t.call("abs_loss")
         
-        if (len(array2) < 1):
-            t.execute(code=36)
         # check that the result array contains the correct output
         t.check_array(array2, [0, 0, 0])
         # check that the register a0 contains the correct output
@@ -154,8 +152,7 @@ class TestZeroOneLoss(unittest.TestCase):
         # load the test for zero_one_loss.s
         t = AssemblyTest(self, "../coverage-src/zero_one_loss.s")
 
-        
-
+    
         # create input arrays in the data section
         array0 = t.array([1, 2, 3, 4, 5])
         array1 = t.array([0, 2, 4, 4, 7])
@@ -175,6 +172,29 @@ class TestZeroOneLoss(unittest.TestCase):
         t.check_array(array2, [0, 1, 0, 1, 0])
         # generate the `assembly/TestZeroOneLoss_test_simple.s` file and run it through venus
         t.execute()
+
+    def test_exception1(self):
+        t = AssemblyTest(self, "../coverage-src/zero_one_loss.s")
+
+    
+        # create input arrays in the data section
+        array0 = t.array([])
+        array1 = t.array([])
+        # load array addresses into argument registers
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+
+        # load array length into argument register
+        t.input_scalar("a2", len(array0))
+        # create a result array in the data section (fill values with -1)
+        array2 = t.array([])
+        # load result array address into argument register
+        t.input_array("a3", array2)
+        # call the `zero_one_loss` function
+        t.call("zero_one_loss")
+        t.execute(code=36)
+        
+       
 
     # Add other test cases if neccesary
 
