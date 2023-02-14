@@ -91,7 +91,7 @@ class TestAbsLoss(unittest.TestCase):
         t.input_scalar("a0", 0x7FFFFFFF)
         
         # call the `initialize_zero` function
-        t.call("initialize_zero")
+        t.call("abs_loss")
         t.execute(code=26)
       
 
