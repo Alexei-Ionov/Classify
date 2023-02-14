@@ -79,7 +79,6 @@ class TestAbsLoss(unittest.TestCase):
         t.input_scalar("a2", len(array0))
         # create a result array in the data section (fill values with -1)
         array2 = t.array([])
-    
         # load address of `array2` into register a3
         t.input_array("a3", array2)
         # call the `abs_loss` function
@@ -289,7 +288,7 @@ class TestInitializeZero(unittest.TestCase):
 
 
         # input the length of the desired array
-        t.input_scalar("a0", sys.maxsize)
+        t.input_scalar("a0", sys.maxsize + 10)
         # call the `initialize_zero` function
         t.call("initialize_zero")
         # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
