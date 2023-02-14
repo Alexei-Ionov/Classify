@@ -33,6 +33,7 @@ matmul:
 
     jal ra SaveToStack      #saves all prior content of s registers onto stack
     jal ra Save
+    la s11 Outer_Loop_Work  #essentailly setting up the ra for the outerloop 
 
     ### FOR DOT ####
     addi a3 x0 1    #initalizing stride of matrix0 to one!
@@ -62,7 +63,6 @@ SaveToStack:
 
 Outer_Loop:
     beq s1 x0 end_loop
-    la s11 Outer_Loop_Work
     j InnerLoop
 
 Outer_Loop_Work:
@@ -105,6 +105,7 @@ InnerLoop:
     mv a2 s2
     addi a3 x0 1    #initalizing stride of matrix0 to one!
     add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
+
     sw a0 0(s6)     #store a0 into our result matrix
     addi s3 s3 4    #index of matrix1 gets incremented by 1 element
     addi s7 s7 1    #increment col index by 1
@@ -128,10 +129,3 @@ end_loop:
 error: 
     li a0 38
     j exit
-
-
-
-
-##THINGS I NEED TO DO: 
-#1.)  
-#2.) 
