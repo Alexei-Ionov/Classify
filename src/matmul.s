@@ -23,24 +23,6 @@
 #   - If the dimensions of m0 and m1 don't match,
 #     this function terminates the program with exit code 38
 # =======================================================
-
-# =======================================================
-# FUNCTION: Dot product of 2 int arrays
-# Arguments:
-#   a0 (int*) is the pointer to the start of arr0
-#   a1 (int*) is the pointer to the start of arr1
-#   a2 (int)  is the number of elements to use
-#   a3 (int)  is the stride of arr0
-#   a4 (int)  is the stride of arr1
-# Returns:
-#   a0 (int)  is the dot product of arr0 and arr1
-# Exceptions:
-#   - If the length of the array is less than 1,
-#     this function terminates the program with error code 36
-#   - If the stride of either array is less than 1,
-#     this function terminates the program with error code 37
-# =======================================================
-
 matmul:
     addi t0 x0 1    #used to store 1 to compare in error checks
     blt a1 t0 error
@@ -57,7 +39,7 @@ matmul:
     jal ra Save
 
     ### FOR DOT ####
-    addi a3 1       #initalizing stride of matrix0 to one!
+    addi a3 x0 1       #initalizing stride of matrix0 to one!
     add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
     ##############
 
@@ -80,9 +62,6 @@ SaveToStack:
 
     jr ra
 
-error: 
-    li a0 38
-    j exit
 
 Outer_Loop:
     beq s1 x0 end_loop
@@ -95,7 +74,7 @@ Outer_Loop:
     mv s6 x0        #reset index col counter
 
     addi t4 x0 1    #temp store imm of 1
-    sub s1 t4       #s1 -= 1
+    sub s1 s1 t4       #s1 -= 1
     j Outer_Loop
 
 Save:
@@ -138,3 +117,6 @@ end_loop:
     lw s1 4(sp)
     lw s0 0(sp)
 
+error: 
+    li a0 38
+    j exit
