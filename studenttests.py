@@ -73,7 +73,7 @@ class TestAbsLoss(unittest.TestCase):
         t.input_array("a1", array1)
 
         # load array length into argument register
-        t.input_scalar("a2", len(array0))
+        t.input_scalar("a2", 0)
  
         array2 = t.array([])
         t.input_array("a3", array2)
@@ -84,15 +84,26 @@ class TestAbsLoss(unittest.TestCase):
         t.call("abs_loss")
         t.execute(code=36)
 
-    def test_exception_malloc(self):
+    def test_exception_bad_len(self):
+        # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
+        array0 = t.array([1, 1, 1])
+        array1 = t.array([1, 1, 1])
 
-        # input the length of the desired array
-        t.input_scalar("a0", 0x7FFFFFFF)
-        
-        # call the `initialize_zero` function
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+
+        # load array length into argument register
+        t.input_scalar("a2", -4)
+ 
+        array2 = t.array([0, 0, 0])
+        t.input_array("a3", array2)
+       
+        # load result array address into argument register
         t.call("abs_loss")
-        t.execute(code=26)
+        t.execute(code=36)
+
+
       
 
     @classmethod
