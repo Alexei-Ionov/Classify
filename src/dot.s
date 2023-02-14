@@ -56,4 +56,5 @@ error_37:
     li a0 37
     j exit
 quit:
-    ret
+    
+    jr ra

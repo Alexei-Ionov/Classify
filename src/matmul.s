@@ -33,7 +33,7 @@ matmul:
 
     jal ra SaveToStack      #saves all prior content of s registers onto stack
     jal ra Save
-    la s11 Outer_Loop_Work  #essentailly setting up the ra for the outerloop 
+      #essentailly setting up the ra for the outerloop 
 
     ### FOR DOT ####
     addi a3 x0 1    #initalizing stride of matrix0 to one!
@@ -44,10 +44,11 @@ matmul:
 
     ##THINGS I NEED TO SAVE: all a0 - a4 plus any t's I use here
     ##s11 USED TO STORE OLD RA
-    ##list of s registers used: s0, s1, s2, s3, s4, s5, s6, s7, s11
+    ##list of s registers used: s0, s1, s2, s3, s4, s5, s6, s7, s10
 
 SaveToStack:
-    addi sp sp -36
+    addi sp sp -40
+    sw s10 36(sp)     
     sw s11 32(sp)
     sw s7 28(sp)
     sw s6 24(sp)
@@ -73,7 +74,7 @@ Outer_Loop_Work:
     mv s7 x0        #reset index col counter
 
     addi t4 x0 1    #temp store imm of 1
-    sub s1 s1 t4       #s1 -= 1
+    sub s1 s1 t4    #s1 -= 1
     
     lw s3 8(sp)     #reset s3 to its OG position (i.e. pointer to first elmeent in arr1)
 
@@ -88,7 +89,8 @@ Save:
     mv s6 a6        #s6 is ptr of res array
     mv s7 x0        #col index
     mv s2 a2
-    
+    la s10 InnerLoopWork
+    la s11 Outer_Loop_Work
     jr ra
 
 InnerLoop:
@@ -96,11 +98,12 @@ InnerLoop:
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
 
+    la ra InnerLoopWork
                     #num of cols in matrix0 == num of elements to use !
     jal ra dot      #call dot
-
+    
                     #a0 should now contain the value of the prev call to dot
-
+InnerLoopWork:
     #RESETTING a registers after calling dot ###
     mv a2 s2
     addi a3 x0 1    #initalizing stride of matrix0 to one!
@@ -120,6 +123,7 @@ error:
     j exit
 
 end_loop:
+    lw s10 36(sp)
     lw s11 32(sp)
     lw s7 28(sp)
     lw s6 24(sp)
@@ -129,4 +133,5 @@ end_loop:
     lw s2 8(sp)
     lw s1 4(sp)
     lw s0 0(sp)
+    addi sp sp 40
     
