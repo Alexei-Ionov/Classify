@@ -62,8 +62,10 @@ SaveToStack:
 
 Outer_Loop:
     beq s1 x0 end_loop
-    jal ra InnerLoop
+    la s11 Outer_Loop_Work
+    j InnerLoop
 
+Outer_Loop_Work:
     addi t4 x0 4    #temp store imm of 4
     mul t5 a2 t4    #t5 = num of cols * 4 (offset)
     add s0 s0 t5    #matrix0 ptr gets incremented by the num of cols * 4
@@ -91,7 +93,6 @@ Save:
 
 InnerLoop:
     bge s7 s5 Continue   #if col index >= num of cols of matrix1, break
-    mv s11 ra           #stores ra into a safe register for later use because it will be overriden
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
 
@@ -104,7 +105,6 @@ InnerLoop:
     mv a2 s2
     addi a3 x0 1    #initalizing stride of matrix0 to one!
     add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
-
     sw a0 0(s6)     #store a0 into our result matrix
     addi s3 s3 4    #index of matrix1 gets incremented by 1 element
     addi s7 s7 1    #increment col index by 1
