@@ -290,7 +290,7 @@ class TestInitializeZero(unittest.TestCase):
 
 
         # input the length of the desired array
-        t.input_scalar("a0", float('inf'))
+        t.input_scalar("a0", sys.maxsize)
         # call the `initialize_zero` function
         t.call("initialize_zero")
         # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
