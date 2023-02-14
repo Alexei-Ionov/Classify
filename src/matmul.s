@@ -40,23 +40,22 @@ matmul:
 
     ### FOR DOT ####
     addi a3 x0 1       #initalizing stride of matrix0 to one!
-    add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
+    add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
     ##############
 
     j Outer_Loop
 
     ##THINGS I NEED TO SAVE: all a0 - a4 plus any t's I use here
     ##s11 USED TO STORE OLD RA
-    ##list of s registers used: s0, s1, s2, s3, s4, s5, s6, s11
+    ##list of s registers used: s0, s1, s3, s4, s5, s6, s11
 
 SaveToStack:
-    addi sp sp -32
-    sw s11 28(sp)
-    sw s6 24(sp)
-    sw s5 20(sp)
-    sw s4 16(sp)
-    sw s3 12(sp)
-    sw s2 8(sp)
+    addi sp sp -28
+    sw s11 24(sp)
+    sw s6 20(sp)
+    sw s5 16(sp)
+    sw s4 12(sp)
+    sw s3 8(sp)
     sw s1 4(sp)
     sw s0 0(sp)
 
@@ -68,7 +67,7 @@ Outer_Loop:
     jal ra InnerLoop
 
     addi t4 x0 4    #temp store imm of 4
-    mul t5 s2 t4    #t5 = num of cols * 4 (offset)
+    mul t5 a2 t4    #t5 = num of cols * 4 (offset)
     add s0 s0 t5    #matrix0 ptr gets incremented by the num of cols * 4
 
     mv s6 x0        #reset index col counter
@@ -79,7 +78,6 @@ Outer_Loop:
 
 Save:
     mv s1 a1 
-    mv s2 a2
     mv s4 a4
     mv s5 a5
     jr ra
@@ -108,12 +106,11 @@ Continue:
 
 
 end_loop:
-    lw s11 28(sp)
-    lw s6 24(sp)
-    lw s5 20(sp)
-    lw s4 16(sp)
-    lw s3 12(sp)
-    lw s2 8(sp)
+    lw s11 24(sp)
+    lw s6 20(sp)
+    lw s5 16(sp)
+    lw s4 12(sp)
+    lw s3 8(sp)
     lw s1 4(sp)
     lw s0 0(sp)
 
