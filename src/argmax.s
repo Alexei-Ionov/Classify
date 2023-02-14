@@ -15,7 +15,7 @@
 #     this function terminates the program with error code 36
 # =================================================================
 argmax:
-    li t0 1
+    addi t0 x0 1
     blt a1 t0 error
 
     ##PROLOGUE##
@@ -47,6 +47,7 @@ error:
     j exit
 
 quit: 
+    mv a0 t1        #setting a0 to res
     lw ra 0(sp)
     addi sp sp 4
     jr ra
