@@ -64,7 +64,7 @@ class TestAbsLoss(unittest.TestCase):
         t.execute()
 
 
-    def test_exception(self):
+    def test_exception2(self):
         # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
 
@@ -274,7 +274,30 @@ class TestInitializeZero(unittest.TestCase):
         t.check_array_pointer("a0", [0, 0, 0, 0])
         t.execute()
 
-    # Add other test cases if neccesary
+    def test_exception_bad_len(self):
+        t = AssemblyTest(self, "../coverage-src/initialize_zero.s")
+
+
+        # input the length of the desired array
+        t.input_scalar("a0", 0)
+        # call the `initialize_zero` function
+        t.call("initialize_zero")
+        # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
+        t.execute(code=36)
+        
+    def test_exception_malloc(self):
+        t = AssemblyTest(self, "../coverage-src/initialize_zero.s")
+
+
+        # input the length of the desired array
+        t.input_scalar("a0", float('inf'))
+        # call the `initialize_zero` function
+        t.call("initialize_zero")
+        # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
+        t.execute(code=26)
+
+
+    
 
     @classmethod
     def tearDownClass(cls):
