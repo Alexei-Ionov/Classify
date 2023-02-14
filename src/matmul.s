@@ -81,17 +81,15 @@ InnerLoop:
     mv a1 s3        #initalizing ptrs for call to dot
     addi a3 x0 1    #initalizing stride of matrix0 to one!
     add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
-
+    mv a2 s2
 
                     #num of cols in matrix0 == num of elements to use !
-    jal dot      #call dot
+    jal dot         #call dot
     
                     #a0 should now contain the value of the prev call to dot
 
-    #RESETTING a registers after calling dot ###
-    addi a3 x0 1    #initalizing stride of matrix0 to one!
-    add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
-
+                    #RESETTING a registers after calling dot ###
+    
     sw a0 0(s6)     #store a0 into our result matrix
     addi s3 s3 4    #index of matrix1 gets incremented by 1 element
     addi s7 s7 1    #increment col index by 1

@@ -25,7 +25,6 @@ dot:
     add a0 x0 x0    #set res = 0
 
     addi t4 x0 4    #constant for next mul instruction. aka jump for each word
-
     mul t5 a3 t4    #new jump that considers stride for arr0
     mul t6 a4 t4    #new jump that considers stride for arr1
 
