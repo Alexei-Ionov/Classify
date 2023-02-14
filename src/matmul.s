@@ -81,7 +81,7 @@ InnerLoop:
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
     addi a3 x0 1    #initalizing stride of matrix0 to one!
-    mv a4 s2        #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
+    mv a4 s5        #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
     mv a2 s2
 
                     #num of cols in matrix0 == num of elements to use !
