@@ -98,12 +98,12 @@ InnerLoop:
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
 
-    la ra InnerLoopWork
+
                     #num of cols in matrix0 == num of elements to use !
     jal ra dot      #call dot
     
                     #a0 should now contain the value of the prev call to dot
-InnerLoopWork:
+
     #RESETTING a registers after calling dot ###
     mv a2 s2
     addi a3 x0 1    #initalizing stride of matrix0 to one!
