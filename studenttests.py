@@ -65,7 +65,7 @@ class TestAbsLoss(unittest.TestCase):
 
     def test_exception_bad_len(self):
         # load the test for abs_loss.s
-        t = AssemblyTest(self, "../coverage-src/squared_loss.s")
+        t = AssemblyTest(self, "../coverage-src/abs_loss.s")
         array0 = t.array([])
         array1 = t.array([])
 
