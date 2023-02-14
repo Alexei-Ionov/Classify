@@ -277,10 +277,9 @@ class TestInitializeZero(unittest.TestCase):
 
 
         # input the length of the desired array
-        t.input_scalar("a0", 0)
+        t.input_scalar("a0", -1)
         # call the `initialize_zero` function
         t.call("initialize_zero")
-        # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
         t.execute(code=36)
         
     def test_exception_malloc(self):
@@ -288,10 +287,10 @@ class TestInitializeZero(unittest.TestCase):
 
 
         # input the length of the desired array
-        t.input_scalar("a0", sys.maxsize + 10)
+        t.input_scalar("a0", sys.maxsize * sys.maxsize)
+        
         # call the `initialize_zero` function
         t.call("initialize_zero")
-        # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
         t.execute(code=26)
 
 
