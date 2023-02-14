@@ -18,12 +18,15 @@
 #     this function terminates the program with error code 37
 # =======================================================
 dot:
+    addi t0 x0 1
+    blt a2 t0 error_36 #less than one element to compare
+    blt a3 t0 error_37
+    blt a4 t0 error_37
+
     #PROLOGUE
     addi sp sp -4
     sw ra 0(sp)
 
-
-    addi t0 x0 1
     mv t1 a0        #copy of arr_0 ptr
     mv t2 a1        #copy of arr_1 ptr
 
@@ -32,10 +35,6 @@ dot:
     addi t4 x0 4    #constant for next mul instruction. aka jump for each word
     mul t5 a3 t4    #new jump that considers stride for arr0
     mul t6 a4 t4    #new jump that considers stride for arr1
-
-    blt a2 t0 error_36 #less than one element to compare
-    blt a3 t0 error_37
-    blt a4 t0 error_37
 
     add t0 x0 x0    #initialize counter instaed of using a2
     j Loop

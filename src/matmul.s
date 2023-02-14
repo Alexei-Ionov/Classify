@@ -117,4 +117,6 @@ end_loop:
     lw s1 4(sp)
     lw s0 0(sp)
     addi sp sp 44
+
+    jr ra
     
