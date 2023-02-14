@@ -115,6 +115,9 @@ InnerLoop:
 Continue:
     jr s11  #JUMP BACK TO OUTERLOOP!
 
+error: 
+    li a0 38
+    j exit
 
 end_loop:
     lw s11 32(sp)
@@ -126,6 +129,4 @@ end_loop:
     lw s2 8(sp)
     lw s1 4(sp)
     lw s0 0(sp)
-error: 
-    li a0 38
-    j exit
+    
