@@ -83,6 +83,16 @@ class TestAbsLoss(unittest.TestCase):
         # call the `squared_loss` function
         t.call("abs_loss")
         t.execute(code=36)
+
+    def test_exception_malloc(self):
+        t = AssemblyTest(self, "../coverage-src/abs_loss.s")
+
+        # input the length of the desired array
+        t.input_scalar("a0", 0x7FFFFFFF)
+        
+        # call the `initialize_zero` function
+        t.call("initialize_zero")
+        t.execute(code=26)
       
 
     @classmethod
