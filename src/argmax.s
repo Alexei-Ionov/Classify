@@ -15,31 +15,41 @@
 #     this function terminates the program with error code 36
 # =================================================================
 argmax:
-    addi t0 x0 1 ##creates a temp register with value of 1 to be used in the if statement below
-    mv t1 a0 #copy pointer over 
-    add t2 x0 x0 #initalizing start index
-    add t3 x0 x0 #initalizing res to index 0
-    add t4 x0 x0 #initalizing max value to be 0. 
-    bge a1 t0 Loop
+    li t0 1
+    blt a1 t0 error
+
+    ##PROLOGUE##
+    addi sp sp -4
+    sw ra 0(sp)
+    ############
+
+    mv t0 x0    #index
+    mv t1 x0    #res - index
+    mv t2 x0    #curr_max
+
+Loop:
+    bge t0 a1 quit
+    lw t3 0(a0)
+    blt t2 t3 Update_Max    #if curr val > curr Max, update 
+
+Loop_Incrementation:
+    addi t0 t0 1
+    addi a0 a0 4
+    j Loop
+
+Update_Max:
+    mv t2 t3
+    mv t1 t0
+    j Loop_Incrementation
+
+error:
     li a0 36
     j exit
-        
-Loop:
-    bge t2 a1 endLoop
-    lw t0 0(a0)
-    #bge t4 t0 Continue #if the curr max is greater than or equal to curr val, then just skip to the end of the block
-    jal ra Change_Max
-    addi t2 t2 1
-    addi t1 t1 4
-    j Loop
-    
-Change_Max: 
-    bge t4 t0 Continue
-    add t4 t0 x0 #update max register to equal the new max
-    add t3 t2 x0 #updating corresponding index 
-    j Continue
-    
-Continue: 
+
+quit: 
+    lw ra 0(sp)
+    addi sp sp 4
     jr ra
 
-endLoop:
+
+    

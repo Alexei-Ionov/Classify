@@ -21,7 +21,7 @@ relu:
     sw ra 0(sp)
     ###
     mv t0 x0        #index
-    la t3 Loop_Incrementation
+    
     
 Loop:
     bge t0 a1 quit
