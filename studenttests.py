@@ -63,7 +63,30 @@ class TestAbsLoss(unittest.TestCase):
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
         t.execute()
 
-    # Add other test cases if neccesary
+
+    def test_exception(self):
+        # load the test for abs_loss.s
+        t = AssemblyTest(self, "../coverage-src/abs_loss.s")
+
+        # create array0 in the data section
+        array0 = t.array([])
+        # load address of `array0` into register a0
+        t.input_array("a0", array0)
+        # create array1 in the data section
+        array1 = t.array([])
+        # load address of `array1` into register a1
+        t.input_array("a1", array1)
+        # set a2 to the length of the array
+        t.input_scalar("a2", len(array0))
+        # create a result array in the data section (fill values with -1)
+        array2 = t.array([])
+    
+        # load address of `array2` into register a3
+        t.input_array("a3", array2)
+        # call the `abs_loss` function
+        t.call("abs_loss")
+        t.execute(code=36)
+      
 
     @classmethod
     def tearDownClass(cls):
@@ -120,7 +143,26 @@ class TestSquaredLoss(unittest.TestCase):
         # generate the `assembly/TestSquaredLoss_test_simple.s` file and run it through venus
         t.execute()
 
-    # Add other test cases if neccesary
+    def test_exception(self):
+        t = AssemblyTest(self, "../coverage-src/squared_loss.s")
+        array0 = t.array([])
+        array1 = t.array([])
+
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
+
+        # load array length into argument register
+        t.input_scalar("a2", len(array0))
+ 
+        array2 = t.array([])
+        t.input_array("a3", array2)
+       
+        # load result array address into argument register
+        
+        # call the `squared_loss` function
+        t.call("squared_loss")
+        t.execute(code=36)
+       
 
     @classmethod
     def tearDownClass(cls):
@@ -193,8 +235,7 @@ class TestZeroOneLoss(unittest.TestCase):
         # call the `zero_one_loss` function
         t.call("zero_one_loss")
         t.execute(code=36)
-        
-       
+
 
     # Add other test cases if neccesary
 
