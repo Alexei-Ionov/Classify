@@ -66,38 +66,22 @@ class TestAbsLoss(unittest.TestCase):
     def test_exception_bad_len(self):
         # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
-        array0 = t.array([])
-        array1 = t.array([])
-
-        t.input_array("a0", array0)
-        t.input_array("a1", array1)
-
+        
         # load array length into argument register
         t.input_scalar("a2", 0)
  
-        array2 = t.array([])
-        t.input_array("a3", array2)
-       
-        # load result array address into argument register
-        
+        # load result array address into argument register        
         # call the `squared_loss` function
         t.call("abs_loss")
         t.execute(code=36)
 
-    def test_exception_bad_len(self):
+    def test_exception_bad_len2(self):
         # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
-        array0 = t.array([1, 1, 1])
-        array1 = t.array([1, 1, 1])
-
-        t.input_array("a0", array0)
-        t.input_array("a1", array1)
-
+        
         # load array length into argument register
         t.input_scalar("a2", -4)
  
-        array2 = t.array([0, 0, 0])
-        t.input_array("a3", array2)
        
         # load result array address into argument register
         t.call("abs_loss")
