@@ -32,14 +32,10 @@ matmul:
     bne a2 a4 error
 
     jal ra SaveToStack      #saves all prior content of s registers onto stack
-
-    mv s0 a0           #set new ptr
-    mv s3 a3           #new ptr for arr1
-    add s6 x0 x0        #col index 
     jal ra Save
 
     ### FOR DOT ####
-    addi a3 x0 1       #initalizing stride of matrix0 to one!
+    addi a3 x0 1    #initalizing stride of matrix0 to one!
     add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
     ##############
 
@@ -74,12 +70,19 @@ Outer_Loop:
 
     addi t4 x0 1    #temp store imm of 1
     sub s1 s1 t4       #s1 -= 1
+    
+    lw s3 8(sp)     #reset s3 to its OG position (i.e. pointer to first elmeent in arr1)
+
     j Outer_Loop
 
 Save:
+    mv s0 a0           #set new ptr
+    mv s3 a3           #new ptr for arr1
     mv s1 a1 
     mv s4 a4
     mv s5 a5
+    mv s6 x0
+    
     jr ra
 
 InnerLoop:
@@ -117,3 +120,10 @@ end_loop:
 error: 
     li a0 38
     j exit
+
+
+
+
+##THINGS I NEED TO DO: 
+#1.)  
+#2.) 
