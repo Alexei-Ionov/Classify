@@ -18,6 +18,11 @@
 #     this function terminates the program with error code 37
 # =======================================================
 dot:
+    #PROLOGUE
+    addi sp sp -4
+    sw ra 0(sp)
+
+
     addi t0 x0 1
     mv t1 a0        #copy of arr_0 ptr
     mv t2 a1        #copy of arr_1 ptr
@@ -55,5 +60,7 @@ error_37:
     li a0 37
     j exit
 quit:
+    lw ra 0(sp)
+    addi sp sp 4
     
     jr ra

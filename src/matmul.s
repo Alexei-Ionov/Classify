@@ -32,7 +32,8 @@ matmul:
     bne a2 a4 error
 
 SaveToStack:
-    addi sp sp -40
+    addi sp sp -44
+    sw ra 40(sp)
     sw s10 36(sp)     
     sw s11 32(sp)
     sw s7 28(sp)
@@ -80,7 +81,7 @@ InnerLoop:
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
     addi a3 x0 1    #initalizing stride of matrix0 to one!
-    add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
+    mv a4 s2        #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
     mv a2 s2
 
                     #num of cols in matrix0 == num of elements to use !
@@ -97,13 +98,14 @@ InnerLoop:
     j InnerLoop
 
 Continue:
-    jr s11  #JUMP BACK TO OUTERLOOP!
+    jr s11  #JUMP BACK TO OUTERLOOPWORK!
 
 error: 
     li a0 38
     j exit
 
 end_loop:
+    lw ra 40(sp)
     lw s10 36(sp)
     lw s11 32(sp)
     lw s7 28(sp)
@@ -114,5 +116,5 @@ end_loop:
     lw s2 8(sp)
     lw s1 4(sp)
     lw s0 0(sp)
-    addi sp sp 40
+    addi sp sp 44
     
