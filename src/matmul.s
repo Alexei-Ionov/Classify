@@ -31,21 +31,6 @@ matmul:
     blt a5 t0 error
     bne a2 a4 error
 
-    jal ra SaveToStack      #saves all prior content of s registers onto stack
-    jal ra Save
-      #essentailly setting up the ra for the outerloop 
-
-    ### FOR DOT ####
-    addi a3 x0 1    #initalizing stride of matrix0 to one!
-    add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
-    ##############
-
-    j Outer_Loop
-
-    ##THINGS I NEED TO SAVE: all a0 - a4 plus any t's I use here
-    ##s11 USED TO STORE OLD RA
-    ##list of s registers used: s0, s1, s2, s3, s4, s5, s6, s7, s10
-
 SaveToStack:
     addi sp sp -40
     sw s10 36(sp)     
@@ -59,8 +44,18 @@ SaveToStack:
     sw s1 4(sp)
     sw s0 0(sp)
 
-    jr ra
-
+Save:
+    mv s0 a0           #set new ptr
+    mv s3 a3           #new ptr for arr1
+    mv s10 s3           #create copy of ptr so I can go back to OG position later after each row iteration of the outer Loop
+    mv s1 a1 
+    mv s4 a4
+    mv s5 a5
+    mv s6 a6        #s6 is ptr of res array
+    mv s7 x0        #col index
+    mv s2 a2
+    la s11 Outer_Loop_Work
+    
 
 Outer_Loop:
     beq s1 x0 end_loop
@@ -68,7 +63,7 @@ Outer_Loop:
 
 Outer_Loop_Work:
     addi t4 x0 4    #temp store imm of 4
-    mul t5 a2 t4    #t5 = num of cols * 4 (offset)
+    mul t5 s2 t4    #t5 = num of cols * 4 (offset)
     add s0 s0 t5    #matrix0 ptr gets incremented by the num of cols * 4
 
     mv s7 x0        #reset index col counter
@@ -76,38 +71,26 @@ Outer_Loop_Work:
     addi t4 x0 1    #temp store imm of 1
     sub s1 s1 t4    #s1 -= 1
     
-    lw s3 8(sp)     #reset s3 to its OG position (i.e. pointer to first elmeent in arr1)
+    mv s3 s10    #reset s3 to its OG position (i.e. pointer to first elmeent in arr1)
 
     j Outer_Loop
-
-Save:
-    mv s0 a0           #set new ptr
-    mv s3 a3           #new ptr for arr1
-    mv s1 a1 
-    mv s4 a4
-    mv s5 a5
-    mv s6 a6        #s6 is ptr of res array
-    mv s7 x0        #col index
-    mv s2 a2
-    
-    la s11 Outer_Loop_Work
-    jr ra
 
 InnerLoop:
     bge s7 s5 Continue   #if col index >= num of cols of matrix1, break
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
+    addi a3 x0 1    #initalizing stride of matrix0 to one!
+    add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0. 
 
 
                     #num of cols in matrix0 == num of elements to use !
-    jal ra dot      #call dot
+    jal dot      #call dot
     
                     #a0 should now contain the value of the prev call to dot
 
     #RESETTING a registers after calling dot ###
-    mv a2 s2
     addi a3 x0 1    #initalizing stride of matrix0 to one!
-    add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
+    add a4 s2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
 
     sw a0 0(s6)     #store a0 into our result matrix
     addi s3 s3 4    #index of matrix1 gets incremented by 1 element
