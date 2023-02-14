@@ -43,15 +43,17 @@ matmul:
 
     ##THINGS I NEED TO SAVE: all a0 - a4 plus any t's I use here
     ##s11 USED TO STORE OLD RA
-    ##list of s registers used: s0, s1, s3, s4, s5, s6, s11
+    ##list of s registers used: s0, s1, s2, s3, s4, s5, s6, s7, s11
 
 SaveToStack:
-    addi sp sp -28
-    sw s11 24(sp)
-    sw s6 20(sp)
-    sw s5 16(sp)
-    sw s4 12(sp)
-    sw s3 8(sp)
+    addi sp sp -36
+    sw s11 32(sp)
+    sw s7 28(sp)
+    sw s6 24(sp)
+    sw s5 20(sp)
+    sw s4 16(sp)
+    sw s3 12(sp)
+    sw s2 8(sp)
     sw s1 4(sp)
     sw s0 0(sp)
 
@@ -66,7 +68,7 @@ Outer_Loop:
     mul t5 a2 t4    #t5 = num of cols * 4 (offset)
     add s0 s0 t5    #matrix0 ptr gets incremented by the num of cols * 4
 
-    mv s6 x0        #reset index col counter
+    mv s7 x0        #reset index col counter
 
     addi t4 x0 1    #temp store imm of 1
     sub s1 s1 t4       #s1 -= 1
@@ -81,12 +83,14 @@ Save:
     mv s1 a1 
     mv s4 a4
     mv s5 a5
-    mv s6 x0
+    mv s6 a6        #s6 is ptr of res array
+    mv s7 x0        #col index
+    mv s2 a2
     
     jr ra
 
 InnerLoop:
-    bge s6 s5 Continue   #if col index >= num of cols of matrix1, break
+    bge s7 s5 Continue   #if col index >= num of cols of matrix1, break
     mv s11 ra           #stores ra into a safe register for later use because it will be overriden
     mv a0 s0        #initalizing ptrs for call to dot
     mv a1 s3        #initalizing ptrs for call to dot
@@ -96,12 +100,15 @@ InnerLoop:
 
                     #a0 should now contain the value of the prev call to dot
 
-    sw a0 0(a6)     #store a0 into our result matrix
+    #RESETTING a registers after calling dot ###
+    mv a2 s2
+    addi a3 x0 1    #initalizing stride of matrix0 to one!
+    add a4 a2 x0    #initalizing stride of matrix1 to be equal to num of cols of matrix0.
 
-    
+    sw a0 0(s6)     #store a0 into our result matrix
     addi s3 s3 4    #index of matrix1 gets incremented by 1 element
-    addi s6 s6 1    #increment col index by 1
-    addi a6 a6 4    #increment ptr to result matrix by one element
+    addi s7 s7 1    #increment col index by 1
+    addi s6 s6 4    #increment ptr to result matrix by one element
     j InnerLoop
 
 Continue:
@@ -109,14 +116,15 @@ Continue:
 
 
 end_loop:
-    lw s11 24(sp)
-    lw s6 20(sp)
-    lw s5 16(sp)
-    lw s4 12(sp)
-    lw s3 8(sp)
+    lw s11 32(sp)
+    lw s7 28(sp)
+    lw s6 24(sp)
+    lw s5 20(sp)
+    lw s4 16(sp)
+    lw s3 12(sp)
+    lw s2 8(sp)
     lw s1 4(sp)
     lw s0 0(sp)
-
 error: 
     li a0 38
     j exit
