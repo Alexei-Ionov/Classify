@@ -105,7 +105,7 @@ ComputeH:
     mv a2 s4                #move num of cols of m1
     mv a3 s11               #move input ptr to a3
     mv a4 s7                #move num of rows of input
-    mv a5 t0                #move num of cols of input
+    mv a5 s8                #move num of cols of input
     mv a6 s10               #move h ptr space to a6
 
     jal matmul      #will update s10 representing h in-place
