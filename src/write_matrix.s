@@ -65,7 +65,7 @@ write_matrix:
 
     li t0 2
 
-    bne a0 t0 fwrite_error1
+    #bne a0 t0 fwrite_error1
 
     mul s5 s2 s3
     mv a2 s5        #num of elements to write to file = num rows * num cols
