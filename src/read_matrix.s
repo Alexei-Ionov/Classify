@@ -27,14 +27,11 @@
 read_matrix:
 
     # Prologue
-    addi sp sp -28
+    addi sp sp -16
     sw ra 0(sp)
-    sw a0 4(sp)
-    sw a1 8(sp)
-    sw a2 12(sp)
-    sw s0 16(sp)    #will save file descriptor
-    sw s1 20(sp)    #will save pointers to heap
-    sw s2 24(sp)    #saves amount of memory needed in bytes over function calls
+    sw s0 4(sp)    #will save file descriptor
+    sw s1 8(sp)    #will save pointers to heap
+    sw s2 12(sp)    #saves amount of memory needed in bytes over function calls
 
 
 fopenWork:
@@ -91,20 +88,16 @@ malloc_matrix:
 close:
     mv a0 s0    #restore file descriptor into a0 
     jal fclose
-    addi t5 x0 -1
-    beq a0 t5 fclose_error
+    bne a0 x0 fclose_error
 
     #END
     mv a0 s1        #move matrix pointer into a0
 
     lw ra 0(sp)
-    lw a0 4(sp)
-    lw a1 8(sp)
-    lw a2 12(sp)
-    lw s0 16(sp)
-    lw s1 20(sp)
-    lw s2 24(sp)
-    addi sp sp 28
+    lw s0 4(sp)    
+    lw s1 8(sp)    
+    lw s2 12(sp)
+    addi sp sp 16
                     #return 
     ret
     
