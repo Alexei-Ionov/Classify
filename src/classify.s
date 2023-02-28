@@ -25,9 +25,7 @@
 #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
 classify:
     li t0 5
-    bne a0 t0 
-
-
+    bne a0 t0 args_error
     addi sp sp -52
     sw ra 0(sp)
     sw s0 4(sp)
@@ -189,6 +187,6 @@ malloc_error:
 args_error:
     li a0 31
     j exit
-    
+
 
 
