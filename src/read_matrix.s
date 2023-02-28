@@ -69,8 +69,12 @@ findRowCol:
     bne a0 s2 fread_error
 
                 #a1 does not contain the pointer anymore! but s1 does:D
-    lw s3 0(s1) #load num of rows into s3
-    lw s4 4(s1) #load num of cols into s4
+    
+    lw t0 0(s1)
+    lw t1 4(s1)
+    sw t0 0(s3)
+    sw t1 0(s4)
+    
 
     j malloc_matrix
 
