@@ -53,9 +53,10 @@ fopenWork:
     j findRowCol
 
 findRowCol:
-    li a2 8     #we need to read 8 bytes of memory: 4 for row int and 4 for col int
-    mv a0 s0    #reload file descriptor
+    addi a2 x0 8    #we need to read 8 bytes of memory: 4 for row int and 4 for col int
+    mv a0 s0        #reload file descriptor
     jal fread
+    addi a2 x0 8    #reload the 8 bytes that will be needed
 
     bne a0 a2 fread_error
 
