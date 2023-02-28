@@ -99,7 +99,7 @@ close:
     lw s1 20(sp)
     addi sp sp 24
     #return 
-    jal ra 
+    ret
     
 fopen_error: 
     li a0 27
