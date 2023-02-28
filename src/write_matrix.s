@@ -44,8 +44,9 @@ write_matrix:
     #a's that have been changed: a0, a1, a2, a3
 
     li a1 1
-    addi t0 x0 -1
+    
     jal fopen
+    addi t0 x0 -1
     beq a0 t0 fopen_error
 
     li a0 8
@@ -66,7 +67,7 @@ write_matrix:
     bne a0 t0 fwrite_error
 
     mul s5 s2 s3
-    mv a2 t0        #num of elements to write to file = num rows * num cols
+    mv a2 s5        #num of elements to write to file = num rows * num cols
     li a3 4         #size of integer = 4 bytes
 
     mv a0 s0        #restore file descriptor
