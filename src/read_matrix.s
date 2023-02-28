@@ -37,9 +37,10 @@ read_matrix:
 
 
 fopenWork:
-    mv a1 x0
+    
     mv s3 a1        #row pointer
-    mv s4 a1        #col pointer
+    mv s4 a2        #col pointer
+    mv a1 x0
     jal fopen   #call fopen --> returns file descriptor in a0. else -1 if failed
 
     addi t0 x0 -1     #to be used in comparing for failure
@@ -67,8 +68,8 @@ findRowCol:
     bne a0 s2 fread_error
 
                 #a1 does not contain the pointer anymore! but s1 does:D
-    lw s3 0(s1) #load num of rows into t0
-    lw s4 4(s1) #load num of cols into t1
+    lw s3 0(s1) #load num of rows into s3
+    lw s4 4(s1) #load num of cols into s4
 
     j malloc_matrix
 
