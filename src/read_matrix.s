@@ -70,7 +70,7 @@ findRowCol:
 
                 #a1 does not contain the pointer anymore! but s1 does:D
     
-    lw t0 0(s1)
+    lw t0 0(s1) 
     lw t1 4(s1)
     sw t0 0(s3)
     sw t1 0(s4)
@@ -80,7 +80,7 @@ findRowCol:
 
 malloc_matrix:
     
-    mul s2 s3 s4   
+    mul s2 t0 t1   
     slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
     mv a0 s2
     jal malloc 
