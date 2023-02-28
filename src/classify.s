@@ -24,9 +24,11 @@
 # Usage:
 #   main.s <M0_PATH> <M1_PATH> <INPUT_PATH> <OUTPUT_PATH>
 classify:
+    #check for args error AKA len(a1) == 5
     li t0 5
     bne a0 t0 args_error
     addi sp sp -52
+
     sw ra 0(sp)
     sw s0 4(sp)
     sw s1 8(sp)
@@ -110,7 +112,7 @@ ComputeH:
 
     jal matmul      #will update s10 representing h in-place
     mv a0 s10
-    mul a1 s3 s8    #num of integers in the h-arr = num rows of m0 * num cols of input
+    mul a1 s3 s8    #num of integers in the h matrix = num rows of m0 * num cols of input
     jal relu        #performed in-place
 
 ComputeO:
@@ -123,7 +125,7 @@ ComputeO:
     mv s9 a0        #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
     ##################
     mul t0 s5 s8    #o will have #rows of m1 and #cols of h (#h cols = # input cols)
-    slli t0 t0 2
+    slli t0 t0 2    #4* num of elements = necessary bytes
     mv a0 t0 
     jal malloc      #allocating memory for o
     beq a0 x0 malloc_error
