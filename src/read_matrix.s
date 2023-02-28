@@ -27,13 +27,14 @@
 read_matrix:
 
     # Prologue
-    addi sp sp -24
+    addi sp sp -28
     sw ra 0(sp)
     sw a0 4(sp)
     sw a1 8(sp)
     sw a2 12(sp)
-    sw s0 16(sp)
-    sw s1 20(sp)
+    sw s0 16(sp)    #will save file descriptor
+    sw s1 20(sp)    #will save pointers to heap
+    sw s2 24(sp)    #saves amount of memory needed in bytes over function calls
 
 
 fopenWork:
@@ -48,7 +49,8 @@ fopenWork:
 
     jal malloc  #should return A pointer to the allocated memory. If the allocation failed, this value is 0.
     beq a0 x0 malloc_error
-    mv a1 a0    #moves pointer to a1 for use in fread
+    mv s1 a0    #to store pointer that will be used to load row & col later
+    mv a1 a0    #moves pointer to a1 for use in first use of fread
 
     j findRowCol
 
@@ -56,27 +58,29 @@ findRowCol:
     addi a2 x0 8    #we need to read 8 bytes of memory: 4 for row int and 4 for col int
     mv a0 s0        #reload file descriptor
     jal fread
-    addi a2 x0 8    #reload the 8 bytes that will be needed
+    addi a2 x0 8    #reload the 8 bytes that will be needed for comparison for error
 
     bne a0 a2 fread_error
 
-                #a1 still contains the pointer!
-    lw t0 0(a1) #load num of rows into t0
-    lw t1 4(a1) #load num of cols into t1
+                #a1 does not contain the pointer anymore! 
+    lw t0 0(s1) #load num of rows into t0
+    lw t1 4(s1) #load num of cols into t1
 
     j malloc_matrix
 
 malloc_matrix:
-    mul a2 t0 t1    
-    slli a2 a2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
-    mv a0 t3 
+    
+    mul s2 t0 t1    
+    slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
+    mv a0 s2
     jal malloc 
     beq a0 x0 malloc_error  #a0 now contains pointer or 0 if error
     mv s1 a0                #store final pointer in s1 for later use as return value
 
-    mv a1 a0    #move pointer from malloc into a1
+    mv a1 s1    #move pointer from malloc into a1
     mv a0 s0    #move file descriptor back into a0
-                #a2 already contains the num of bytes needed to be read
+                
+    mv a2 s2    #move num of bytes needed into a2
 
     jal fread
     bne a0 a2 fread_error
@@ -98,8 +102,9 @@ close:
     lw a2 12(sp)
     lw s0 16(sp)
     lw s1 20(sp)
-    addi sp sp 24
-    #return 
+    lw s2 24(sp)
+    addi sp sp 28
+                    #return 
     ret
     
 fopen_error: 
