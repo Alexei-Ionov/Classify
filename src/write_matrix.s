@@ -108,7 +108,7 @@ fopen_error:
     
 
 fwrite_error1:
-    li a0 99 
+    li a0 30
     j exit
 
 fwrite_error2:
