@@ -113,7 +113,7 @@ fwrite_error1:
     j exit
 
 fwrite_error2:
-    li a0 100
+    li a0 30
     j exit
 
 
