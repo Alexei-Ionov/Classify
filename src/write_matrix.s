@@ -53,7 +53,8 @@ write_matrix:
     jal malloc
     mv s4 a0        #save the pointer of the row,col into s4
 
-
+    sw s2 0(s4)     #save num of rows onto heap
+    sw s3 4(s4)     #save num of cols onto heap
 
     mv a0 s0        #load back file descriptor
     mv a1 s4        #pointer for row,col
