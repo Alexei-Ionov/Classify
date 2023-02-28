@@ -71,9 +71,7 @@ findRowCol:
 malloc_matrix:
     
     mul s2 t0 t1    
-    addi t5 x0 4
-    mul s2 s2 t5
-   
+    slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
     mv a0 s2
     jal malloc 
     beq a0 x0 malloc_error  #a0 now contains pointer or 0 if error
@@ -93,7 +91,8 @@ malloc_matrix:
 close:
     mv a0 s0    #restore file descriptor into a0 
     jal fclose
-    bne a0 x0 fclose_error
+    addi t5 x0 -1
+    beq a0 t5 fclose_error
 
     #END
     mv a0 s1        #move matrix pointer into a0
