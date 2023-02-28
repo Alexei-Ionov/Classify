@@ -64,7 +64,7 @@ write_matrix:
 
     li t0 2
 
-    bne a0 t0 fwrite_error
+    bne a0 t0 fwrite_error1
 
     mul s5 s2 s3
     mv a2 s5        #num of elements to write to file = num rows * num cols
@@ -75,7 +75,7 @@ write_matrix:
 
     jal fwrite 
 
-    bne s5 a0 fwrite_error
+    bne s5 a0 fwrite_error2
 
     mv a0 s0 
 
@@ -105,9 +105,16 @@ fopen_error:
     li a0 27
     j exit
 
-fwrite_error:
+    
+
+fwrite_error1:
     li a0 30 
     j exit
+
+fwrite_error2:
+    li a0 31 
+    j exit
+
 
 
 fclose_error:
