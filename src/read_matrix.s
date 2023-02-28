@@ -48,12 +48,12 @@ fopenWork:
 
     mv s0 a0    #save the file descriptor
     
-    #li a0 8     #argument for malloc 
+    li a0 8     #argument for malloc 
 
-   #jal malloc  #should return A pointer to the allocated memory. If the allocation failed, this value is 0.
-    #beq a0 x0 malloc_error
+    jal malloc  #should return A pointer to the allocated memory. If the allocation failed, this value is 0.
+    beq a0 x0 malloc_error
     
-   #mv s1 a0    #to store pointer that will be used to load row & col later
+    mv s1 a0    #to store pointer that will be used to load row & col later
    
     
 
@@ -102,8 +102,8 @@ close:
 
     #END
     mv a0 s1        #move matrix pointer into a0
-    mv a1 s3
-    mv a2 s4
+    lw a1 0(s3)
+    lw a2 0(s4)
 
     lw ra 0(sp)
     lw s0 4(sp)    
