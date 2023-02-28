@@ -50,6 +50,8 @@ fopenWork:
     beq a0 x0 malloc_error
     mv a1 a0    #moves pointer to a1 for use in fread
 
+    j findRowCol
+
 findRowCol:
     li a2 8     #we need to read 8 bytes of memory: 4 for row int and 4 for col int
     mv a0 s0    #reload file descriptor
@@ -60,6 +62,8 @@ findRowCol:
                 #a1 still contains the pointer!
     lw t0 0(a1) #load num of rows into t0
     lw t1 4(a1) #load num of cols into t1
+
+    j malloc_matrix
 
 malloc_matrix:
     mul a2 t0 t1    
@@ -75,6 +79,8 @@ malloc_matrix:
 
     jal fread
     bne a0 a2 fread_error
+
+    j close
 
 
 close:
