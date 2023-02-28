@@ -108,11 +108,11 @@ fopen_error:
     
 
 fwrite_error1:
-    li a0 30 
+    li a0 99 
     j exit
 
 fwrite_error2:
-    li a0 31 
+    li a0 100
     j exit
 
 
