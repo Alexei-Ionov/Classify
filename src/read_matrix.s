@@ -27,15 +27,19 @@
 read_matrix:
 
     # Prologue
-    addi sp sp -16
+    addi sp sp -24
     sw ra 0(sp)
     sw s0 4(sp)    #will save file descriptor
     sw s1 8(sp)    #will save pointers to heap
     sw s2 12(sp)    #saves amount of memory needed in bytes over function calls
+    sw s3 16(sp)    #s3 will be our pointer to num rows
+    sw s4 20(sp)    #s4 will be our pinter to num cols
 
 
 fopenWork:
     mv a1 x0
+    mv s3 a1        #row pointer
+    mv s4 a1        #col pointer
     jal fopen   #call fopen --> returns file descriptor in a0. else -1 if failed
 
     addi t0 x0 -1     #to be used in comparing for failure
@@ -46,32 +50,36 @@ fopenWork:
 
     jal malloc  #should return A pointer to the allocated memory. If the allocation failed, this value is 0.
     beq a0 x0 malloc_error
+    
     mv s1 a0    #to store pointer that will be used to load row & col later
-    mv a1 a0    #moves pointer to a1 for use in first use of fread
+   
+    
 
     j findRowCol
 
 findRowCol:
     li s2 8         #we need to read 8 bytes of memory: 4 for row int and 4 for col int. store for after fn call
-    addi a2 x0 8    #load the 8 bytes that will be needed for comparison for error
+    mv a2 s2        #load the 8 bytes that will be needed for comparison for error
     mv a0 s0        #reload file descriptor
+    mv a1 s1        #moves pointer to a1 for first use of fread
     jal fread
    
     bne a0 s2 fread_error
 
                 #a1 does not contain the pointer anymore! but s1 does:D
-    lw t0 0(s1) #load num of rows into t0
-    lw t1 4(s1) #load num of cols into t1
+    lw s3 0(s1) #load num of rows into t0
+    lw s4 4(s1) #load num of cols into t1
 
     j malloc_matrix
 
 malloc_matrix:
     
-    mul s2 t0 t1    
+    mul s2 s3 s4   
     slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
     mv a0 s2
     jal malloc 
     beq a0 x0 malloc_error  #a0 now contains pointer or 0 if error
+
     mv s1 a0                #store final pointer in s1 for later use as return value
 
     mv a1 s1    #move pointer from malloc into a1
@@ -96,8 +104,11 @@ close:
     lw ra 0(sp)
     lw s0 4(sp)    
     lw s1 8(sp)    
-    lw s2 12(sp)
-    addi sp sp 16
+    lw s2 12(sp)    
+    lw s3 16(sp)    
+    lw s4 20(sp)    
+
+    addi sp sp 24
                     #return 
     ret
     
