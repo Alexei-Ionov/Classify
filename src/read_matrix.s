@@ -55,14 +55,14 @@ fopenWork:
     j findRowCol
 
 findRowCol:
-    addi a2 x0 8    #we need to read 8 bytes of memory: 4 for row int and 4 for col int
+    li s2 8         #we need to read 8 bytes of memory: 4 for row int and 4 for col int. store for after fn call
+    addi a2 x0 8    #load the 8 bytes that will be needed for comparison for error
     mv a0 s0        #reload file descriptor
     jal fread
-    addi a2 x0 8    #reload the 8 bytes that will be needed for comparison for error
+   
+    bne a0 s2 fread_error
 
-    bne a0 a2 fread_error
-
-                #a1 does not contain the pointer anymore! 
+                #a1 does not contain the pointer anymore! but s1 does:D
     lw t0 0(s1) #load num of rows into t0
     lw t1 4(s1) #load num of cols into t1
 
@@ -83,7 +83,7 @@ malloc_matrix:
     mv a2 s2    #move num of bytes needed into a2
 
     jal fread
-    bne a0 a2 fread_error
+    bne a0 s2 fread_error
 
     j close
 
