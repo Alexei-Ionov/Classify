@@ -62,6 +62,7 @@ classify:
     jal malloc_work 
     mv s8 a0            #col ptr for input
     j Save_ptrs
+    ###############
 
 malloc_work:
 
@@ -76,7 +77,6 @@ malloc_work:
     addi sp sp 4
     ret 
     
-    ###############
 Save_ptrs:
 
     lw a0 4(s1)     #stores file path of m0 in a0
@@ -122,19 +122,28 @@ ComputeH:
 ComputeO:
 
     ###SETS UP ptr to m1######
+
+    mv a0 s9            #ptr to be deallocated
+    jal Free_Data      #frees memory associated with m0 ptr!
+
     lw a0 8(s1)     #storing file path of m1 in a0
     mv a1 s5
     mv a2 s6
     jal read_matrix
     lw s5 0(a1)        #store num rows of m1 into s5
-    lw s6 0(a2)        #store num cols of m1 into s5
-    mv s9 a0        #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
+    lw s6 0(a2)        #store num cols of m1 into s6
+    mv s9 a0           #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
     ##################
+
+    mv a0 s11          #storing ptr to input into a0
+    jal Free_Data      #deallocating memory associated with ptr to input
+
     mul t0 s5 s8    #o will have #rows of m1 and #cols of h (#h cols = # input cols)
     slli t0 t0 2    #4* num of elements = necessary bytes
     mv a0 t0 
     jal malloc      #allocating memory for o
     beq a0 x0 malloc_error
+      
     mv s11 a0           #store o ptr into s11 which was prev ptr to input
 
     mv a0 s9        #ptr to m1 into a0
@@ -156,21 +165,57 @@ Write_to_output:
     jal write_matrix
 
 Argmax_work:
-    mv a0 s11
+
+    mv a0 s9
+    jal Free_Data   #free ptr to m1
+
+    mv a0 s11       #mv o ptr to arg 0
     mul a1 s5 s8    #num elements = s5 * s8 (num rows of m1 * num cols of input)
 
     jal argmax
     mv s9 a0    #save the value returned by argmax as it is what should be returned in the end
     li t0 1
-    beq s2 t0 Free_Data
+    beq s2 t0 Free_leftovers
+    mv a0 s9
     jal print_int           #prints the value returned by argmax
     li a0 '\n'
     jal print_char
 
+    j Free_leftovers
+
 Free_Data:
+    addi sp sp -4
+    sw ra 0(sp)
+
+    jal free 
+
+    lw ra 0(sp)
+    addi sp sp 4
+    ret
+
+Free_leftovers:
+    ########free all the things we've malloced######
+    mv a0 s3
+    jal free
+    mv a0 s4 
+    jal free
+    mv a0 s5 
+    jal free
+    mv a0 s6 
+    jal free
+    mv a0 s7 
+    jal free
+    mv a0 s8 
+    jal free
+    mv a0 s10 
+    jal free
+    mv a0 s11
+    jal free
 
 end_of_function:
-    mv a0 s9        #store return value of argmax
+    mv a0 s9         #store return value of argmax
+
+
     lw ra 0(sp)
     lw s0 4(sp)
     lw s1 8(sp)
