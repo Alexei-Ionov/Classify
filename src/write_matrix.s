@@ -26,6 +26,101 @@ write_matrix:
 
     # Prologue
 
+    addi sp sp -28
+    sw ra 0(sp)
+    sw s0 4(sp)
+    sw s1 8(sp)
+    sw s2 12(sp)
+    sw s3 16(sp)
+    sw s4 20(sp)
+    sw s5 24(sp)
+   
+    
+
+    mv s0 a0 
+    mv s1 a1 
+    mv s2 a2
+    mv s3 a3
+    #a's that have been changed: a0, a1, a2, a3
+
+    li a1 1
+    addi t0 x0 -1
+    jal fopen
+    beq a0 t0 fopen_error
+
+    li a0 8
+    jal malloc
+    mv s4 a0        #save the pointer of the row,col into s4
+
+
+
+    mv a0 s0        #load back file descriptor
+    mv a1 s4        #pointer for row,col
+    li a2 2         #will tell it to only write 2 elements 
+    li a3 4         #bytes per element
+
+    jal fwrite
+
+    li t0 2
+
+    bne a0 t0 fwrite_error
+
+    mul s5 s2 s3
+    mv a2 t0        #num of elements to write to file = num rows * num cols
+    li a3 4         #size of integer = 4 bytes
+
+    mv a0 s0        #restore file descriptor
+    mv a1 s1        #pointer to matrix 
+
+    jal fwrite 
+
+    bne s5 a0 fwrite_error
+
+    mv a0 s0 
+
+    jal fclose
+    bne a0 x0 fclose_error
+
+    lw ra 0(sp)
+    lw s0 4(sp)
+    lw s1 8(sp)
+    lw s2 12(sp)
+    lw s3 16(sp)
+    lw s4 20(sp)
+    lw s5 24(sp)
+
+    addi sp sp 28
+
+    ret
+
+
+malloc_error:
+    li a0 26
+    j exit
+
+
+
+fopen_error:
+    li a0 27
+    j exit
+
+fwrite_error:
+    li a0 30 
+    j exit
+
+
+fclose_error:
+    li a0 28 
+    j exit
+    
+
+
+
+
+
+
+
+
 
 
 
