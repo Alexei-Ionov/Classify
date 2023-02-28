@@ -102,8 +102,8 @@ close:
 
     #END
     mv a0 s1        #move matrix pointer into a0
-    lw a1 0(s3)
-    lw a2 0(s4)
+    mv a1 s3
+    mv a2 s4
 
     lw ra 0(sp)
     lw s0 4(sp)    
