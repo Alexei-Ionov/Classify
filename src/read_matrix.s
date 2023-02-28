@@ -71,7 +71,9 @@ findRowCol:
 malloc_matrix:
     
     mul s2 t0 t1    
-    slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
+    addi t5 x0 4
+    mul s2 s2 t5
+   
     mv a0 s2
     jal malloc 
     beq a0 x0 malloc_error  #a0 now contains pointer or 0 if error
