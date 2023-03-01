@@ -138,13 +138,9 @@ ComputeO:
 
     
 
-    lw t5 0(s5)         #num rows of m1
-    lw t6 0(s6)         #num cols of m1
-
     lw a0 8(s1)     #storing file path of m1 in a0
-    mv a1 t5
-    mv a2 t6
-
+    mv a1 s5
+    mv a2 s6
     jal read_matrix
  
     mv s9 a0           #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
@@ -227,7 +223,22 @@ Free_Data:
 
 Free_leftovers:
     ########free all the things we've malloced######
-    
+    mv a0 s3
+    jal free
+    mv a0 s4 
+    jal free
+    mv a0 s5 
+    jal free
+    mv a0 s6 
+    jal free
+    mv a0 s7 
+    jal free
+    mv a0 s8 
+    jal free
+    mv a0 s10 
+    jal free
+    mv a0 s11
+    jal free
 
 end_of_function:
     mv a0 s9         #store return value of argmax
