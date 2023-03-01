@@ -77,46 +77,57 @@ malloc_work:
     addi sp sp 4
     ret 
     
-Save_ptrs:
-
-    lw a0 4(s1)     #stores file path of m0 in a0
+Save_ptrs:  
+  
     mv a1 s3
     mv a2 s4
+    lw a0 4(s1)     #stores file path of m0 in a0
     jal read_matrix
-    lw s3 0(s3)        #set s3 to be the num of rows in m0!
-    lw s4 0(s4)        #set s4 to be num of cols in m0!
-
     mv s9 a0        #stores pointer to matrix m0 in s9
-
-    lw a0 12(s1)
+    
+    
     mv a1 s7
     mv a2 s8
+    lw a0 12(s1)
     jal read_matrix 
-    lw s7 0(s7)
-    lw s8 0(s8)
     mv s11 a0        #storing input matrix ptr into s11
 
 
 ComputeH:
-    mul t0 s3 s8        #num rows of m0 * num cols of input
+    lw t3 0(s3)         #num rows of m0
+    lw t4 0(s8)         #num cols of input
+
+    mul t0 t3 t4       #num rows of m0 * num cols of input
     slli t0 t0 2        #num elements * 4 for total num of bytes needed to be malloced
 
     mv a0 t0
     jal malloc 
     beq a0 x0 malloc_error
+
     mv s10 a0                #s10 to store ptr to h matrix (result of mul)
+    
+    ###LOAD ACTUAL INT####
+    lw t3 0(s3)         #num rows of m0
+    lw t4 0(s4)         #num cols of m0
+    lw t5 0(s7)         #num rows of input
+    lw t6 0(s8)         #num cols of input
+    ############
 
     mv a0 s9                #move m0 ptr into a0
-    mv a1 s3                #move num of rows of m0
-    mv a2 s4                #move num of cols of m1
+    mv a1 t3                #move num of rows of m0
+    mv a2 t4                #move num of cols of m1
     mv a3 s11               #move input ptr to a3
-    mv a4 s7                #move num of rows of input
-    mv a5 s8                #move num of cols of input
+    mv a4 t5                #move num of rows of input
+    mv a5 t6                #move num of cols of input
     mv a6 s10               #move h ptr space to a6
 
-    jal matmul      #will update s10 representing h in-place
+    jal matmul          #will update s10 representing h in-place
     mv a0 s10
-    mul a1 s3 s8    #num of integers in the h matrix = num rows of m0 * num cols of input
+
+    lw t3 0(s3)         #num rows of m0
+    lw t4 0(s8)         #num cols of input
+
+    mul a1 t3 t4    #num of integers in the h matrix = num rows of m0 * num cols of input
     jal relu        #performed in-place
 
 ComputeO:
@@ -126,19 +137,28 @@ ComputeO:
     mv a0 s9            #ptr to be deallocated
     jal Free_Data      #frees memory associated with m0 ptr!
 
+    
+
+    lw t5 0(s5)         #num rows of m1
+    lw t6 0(s6)         #num cols of m1
+
     lw a0 8(s1)     #storing file path of m1 in a0
-    mv a1 s5
-    mv a2 s6
+    mv a1 t5
+    mv a2 t6
+
     jal read_matrix
-    lw s5 0(s5)        #store num rows of m1 into s5
-    lw s6 0(s6)        #store num cols of m1 into s6
+ 
     mv s9 a0           #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
     ##################
 
     mv a0 s11          #storing ptr to input into a0
     jal Free_Data      #deallocating memory associated with ptr to input
 
-    mul t0 s5 s8    #o will have #rows of m1 and #cols of h (#h cols = # input cols)
+    lw t5 0(s5)         #num rows of m1
+    lw t6 0(s8)         #num cols of input
+    mul t0 t5 t6    #o will have #rows of m1 and #cols of h (#h cols = # input cols)
+
+
     slli t0 t0 2    #4* num of elements = necessary bytes
     mv a0 t0 
     jal malloc      #allocating memory for o
@@ -146,22 +166,31 @@ ComputeO:
       
     mv s11 a0           #store o ptr into s11 which was prev ptr to input
 
+    lw t5 0(s5)
+    lw t6 0(s6)
+    lw t3 0(s3)
+    lw t4 0(s8)
+
+
     mv a0 s9        #ptr to m1 into a0
-    mv a1 s5 
-    mv a2 s6
+    mv a1 t5 
+    mv a2 t6
     mv a3 s10       #ptr to h
-    mv a4 s3        #rows of h (rows of m0)
-    mv a5 s8        #cols of h (cols of input)
+    mv a4 t3        #rows of h (rows of m0)
+    mv a5 t4        #cols of h (cols of input)
     mv a6 s11
     jal matmul      #resulting matrix o is stored in s11
 
 
 Write_to_output:
-    lw t0 16(s1)    
-    mv a0 t0        #store output path into arg a0
+    lw a0 16(s1)    #store output path into a0
     mv a1 s11       #mv ptr to o into a1
-    mv a2 s5
-    mv a3 s8
+
+    lw t5 0(s5)     #num rows of output
+    lw t4 0(s8)     #num cols of output
+
+    mv a2 t5
+    mv a3 t4
     jal write_matrix
 
 Argmax_work:
@@ -170,9 +199,13 @@ Argmax_work:
     jal Free_Data   #free ptr to m1
 
     mv a0 s11       #mv o ptr to arg 0
-    mul a1 s5 s8    #num elements = s5 * s8 (num rows of m1 * num cols of input)
 
+    lw t5 0(s5)
+    lw t4 0(s8)
+
+    mul a1 t5 t4    #num elements = s5 * s8 (num rows of m1 * num cols of input)
     jal argmax
+
     mv s9 a0    #save the value returned by argmax as it is what should be returned in the end
     li t0 1
     beq s2 t0 Free_leftovers
