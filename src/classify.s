@@ -139,11 +139,11 @@ ComputeO:
     
 
     lw a0 8(s1)     #storing file path of m1 in a0
-    mv a1 s5
-    mv a2 s6
+    mv a1 s5        #m1 row ptr
+    mv a2 s6        #m1 col ptr
     jal read_matrix
  
-    mv s9 a0           #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
+    mv s9 a0           #PTR to m1 will be stored in s9 since the previous value (ptr to m0) has been freed
     ##################
 
     mv a0 s11          #storing ptr to input into a0
@@ -168,8 +168,8 @@ ComputeO:
 
 
     mv a0 s9        #ptr to m1 into a0
-    mv a1 t5 
-    mv a2 t6
+    mv a1 t5        #m1 num of row 
+    mv a2 t6        #m1 num of col 
     mv a3 s10       #ptr to h
     mv a4 t3        #rows of h (rows of m0)
     mv a5 t4        #cols of h (cols of input)
@@ -222,7 +222,7 @@ Free_Data:
     ret
 
 Free_leftovers:
-    ########free all the things we've malloced######
+    ########free all the things we haven't freed yet######
     mv a0 s3
     jal free
     mv a0 s4 

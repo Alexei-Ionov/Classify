@@ -89,7 +89,6 @@ free_data:
     mv a0 s4        #freeing memory with ptr to row, col block
     jal free
 
-
 epilogue:
     lw ra 0(sp)
     lw s0 4(sp)
@@ -100,7 +99,6 @@ epilogue:
     lw s5 24(sp)
 
     addi sp sp 28
-
     ret
 
 
