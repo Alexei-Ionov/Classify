@@ -44,12 +44,12 @@ write_matrix:
     #a's that have been changed: a0, a1, a2, a3
 
     li a1 1
-    
     jal fopen
 
     addi t0 x0 -1
     beq a0 t0 fopen_error
-    mv s0 a0 
+
+    mv s0 a0               #save file descriptor
 
     li a0 8
     jal malloc
@@ -67,7 +67,7 @@ write_matrix:
 
     li t0 2
 
-    #bne a0 t0 fwrite_error1
+    #bne a0 t0 fwrite_error
 
     mul s5 s2 s3
     mv a2 s5        #num of elements to write to file = num rows * num cols
@@ -78,13 +78,19 @@ write_matrix:
 
     jal fwrite 
 
-    bne s5 a0 fwrite_error2
+    bne s5 a0 fwrite_error
 
     mv a0 s0 
 
     jal fclose
     bne a0 x0 fclose_error
 
+free_data:
+    mv a0 s4        #freeing memory with ptr to row, col block
+    jal free
+
+
+epilogue:
     lw ra 0(sp)
     lw s0 4(sp)
     lw s1 8(sp)
@@ -110,15 +116,9 @@ fopen_error:
 
     
 
-fwrite_error1:
+fwrite_error:
     li a0 30
     j exit
-
-fwrite_error2:
-    li a0 30
-    j exit
-
-
 
 fclose_error:
     li a0 28 
