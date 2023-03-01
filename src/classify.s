@@ -72,7 +72,6 @@ malloc_work:
     li a0 4 
     jal malloc 
     beq a0 x0 malloc_error
-
     lw ra 0(sp)
     addi sp sp 4
     ret 
@@ -228,22 +227,7 @@ Free_Data:
 
 Free_leftovers:
     ########free all the things we've malloced######
-    mv a0 s3
-    jal free
-    mv a0 s4 
-    jal free
-    mv a0 s5 
-    jal free
-    mv a0 s6 
-    jal free
-    mv a0 s7 
-    jal free
-    mv a0 s8 
-    jal free
-    mv a0 s10 
-    jal free
-    mv a0 s11
-    jal free
+    
 
 end_of_function:
     mv a0 s9         #store return value of argmax
