@@ -83,8 +83,8 @@ Save_ptrs:
     mv a1 s3
     mv a2 s4
     jal read_matrix
-    lw s3 0(a1)        #set s3 to be the num of rows in m0!
-    lw s4 0(a2)        #set s4 to be num of cols in m0!
+    lw s3 0(s3)        #set s3 to be the num of rows in m0!
+    lw s4 0(s4)        #set s4 to be num of cols in m0!
 
     mv s9 a0        #stores pointer to matrix m0 in s9
 
@@ -92,8 +92,8 @@ Save_ptrs:
     mv a1 s7
     mv a2 s8
     jal read_matrix 
-    lw s7 0(a1)
-    lw s8 0(a2)
+    lw s7 0(s7)
+    lw s8 0(s8)
     mv s11 a0        #storing input matrix ptr into s11
 
 
@@ -130,8 +130,8 @@ ComputeO:
     mv a1 s5
     mv a2 s6
     jal read_matrix
-    lw s5 0(a1)        #store num rows of m1 into s5
-    lw s6 0(a2)        #store num cols of m1 into s6
+    lw s5 0(s5)        #store num rows of m1 into s5
+    lw s6 0(s6)        #store num cols of m1 into s6
     mv s9 a0           #PTR TO m1 will be stored in s9 since the previous value (ptr to m0) is no longer needed
     ##################
 
