@@ -48,38 +48,26 @@ fopenWork:
 
     mv s0 a0    #save the file descriptor
     
-    li a0 8     #argument for malloc 
-
-    jal malloc  #should return A pointer to the allocated memory. If the allocation failed, this value is 0.
-    beq a0 x0 malloc_error
-    
-    mv s1 a0    #to store pointer that will be used to load row & col later
-   
-    
-
-    j findRowCol
-
 findRowCol:
-    li s2 8         #we need to read 8 bytes of memory: 4 for row int and 4 for col int. store for after fn call
-    mv a2 s2        #load the 8 bytes that will be needed for comparison for error
+
+
+    li s2 4         #we need to read 4 bytes of memory
+    mv a2 s2        #load the 4 bytes that will be needed for comparison for error
     mv a0 s0        #reload file descriptor
-    mv a1 s1        #moves pointer to a1 for first use of fread
+    mv a1 s3        #ptr to num rows
     jal fread
-   
     bne a0 s2 fread_error
 
+    mv a2 s2
+    mv a0 s0 
+    mv a1 s4
+    jal fread
+    bne a0 s2 fread_error
                 #a1 does not contain the pointer anymore! but s1 does:D
     
-    lw t0 0(s1) 
-    lw t1 4(s1)
-    sw t0 0(s3)
-    sw t1 0(s4)
-    
-
-    j malloc_matrix
-
 malloc_matrix:
-    
+    lw t0 0(s3)     #num rows 
+    lw t1 0(s4)     #num cols
     mul s2 t0 t1   
     slli s2 s2 2   #num bytes needed for matrix = rows * cols * 4! will be used in fread
     mv a0 s2
@@ -90,14 +78,10 @@ malloc_matrix:
 
     mv a1 s1    #move pointer from malloc into a1
     mv a0 s0    #move file descriptor back into a0
-                
     mv a2 s2    #move num of bytes needed into a2
 
     jal fread
     bne a0 s2 fread_error
-
-    j close
-
 
 close:
     mv a0 s0    #restore file descriptor into a0 
@@ -117,7 +101,7 @@ close:
     lw s4 20(sp)    
 
     addi sp sp 24
-                    #return 
+         
     ret
     
 fopen_error: 
