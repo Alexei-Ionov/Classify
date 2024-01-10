@@ -1,3 +1,1 @@
-# 61C Spring 2023 Project 2: CS61Classify
-
-Spec: [https://cs61c.org/sp23/projects/proj2/](https://cs61c.org/sp23/projects/proj2/)
+This project focuses on implementing a matrix multiplication function and file operations to read pictures of handwritten digits using a simple ML algorithm. 
